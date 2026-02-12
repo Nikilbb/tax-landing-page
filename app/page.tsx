@@ -1,14 +1,24 @@
 "use client";
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Phone, CheckCircle, ArrowRight, ShieldCheck, Zap, Globe } from 'lucide-react';
 import LeadForm from './LeadForm';
 import WhatsAppButton from './WhatsAppButton';
+// Import the tracking engine built for Task 2
+import { useTracker } from '../hooks/useTracker';
 
 function LandingContent() {
-  const trackEvent = (name: string) => {
-    console.log(`Event: ${name}`);
-  };
+  // Initialize the tracking engine
+  const { trackEvent } = useTracker();
+
+  // 1. AUTOMATIC PAGE VIEW TRACKING
+  // Satisfies the "Page views" requirement for Task 2
+  useEffect(() => {
+    trackEvent('page_view', { 
+      page_title: 'Home Page',
+      domain: 'taxflow.com' 
+    });
+  }, []);
 
   const testimonials = [
     { name: "Rajesh Shetty", role: "CEO, Coastal Tech", content: "TaxFlow saved us over ₹2 Lakhs in penalties this year. Their expertise is unmatched in Mangaluru." },
@@ -22,12 +32,11 @@ function LandingContent() {
       {/* 1. ULTRA-MODERN NAV */}
       <nav className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-          {/* UPDATED LOGO: CLICK TO SCROLL HOME */}
           <div 
             className="flex items-center gap-3 cursor-pointer group"
             onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
-              trackEvent('logo_home_click');
+              trackEvent('cta_click', { button_name: 'logo_home', action: 'scroll_top' });
             }}
           >
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg shadow-blue-200 flex items-center justify-center text-white font-black text-xl italic transition-transform group-hover:scale-105">
@@ -42,9 +51,10 @@ function LandingContent() {
             <a href="#benefits" className="hover:text-blue-600 transition">Benefits</a>
             <a href="#process" className="hover:text-blue-600 transition">Process</a>
           </div>
+          
           <a 
             href="tel:+919876543210" 
-            onClick={() => trackEvent('header_call_click')}
+            onClick={() => trackEvent('cta_click', { button_name: 'header_call', type: 'phone' })}
             className="group relative px-6 py-3 bg-slate-900 text-white rounded-full font-bold overflow-hidden transition-all hover:pr-12"
           >
             <span className="relative z-10">Call Expert</span>
@@ -89,7 +99,7 @@ function LandingContent() {
             <div className="relative bg-white p-12 rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100">
               <div className="mb-10">
                 <h3 className="text-3xl font-bold text-slate-900 tracking-tight">Reserve a Session</h3>
-                <p className="text-slate-500 mt-2 font-medium">Join 500+ Mangaluru businesses today.</p>
+                <p className="text-slate-500 mt-2 font-medium">Join 500+ Dubai businesses today.</p>
               </div>
               <LeadForm />
             </div>
@@ -191,12 +201,16 @@ function LandingContent() {
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-50 md:hidden w-[90%]">
         <a 
           href="tel:+919876543210"
+          onClick={() => trackEvent('cta_click', { button_name: 'mobile_float_call', type: 'phone' })}
           className="w-16 h-16 bg-white border border-slate-200 rounded-2xl flex items-center justify-center shadow-2xl text-slate-900"
         >
           <Phone size={24} />
         </a>
         <button 
-          onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => {
+            document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' });
+            trackEvent('cta_click', { button_name: 'mobile_float_start', action: 'scroll_form' });
+          }}
           className="flex-1 bg-blue-600 text-white h-16 rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-300 active:scale-95 transition-transform"
         >
           Start Filing Now
@@ -211,6 +225,9 @@ function LandingContent() {
         <h2 className="text-4xl font-bold mb-8">Ready to secure your finances?</h2>
         <a 
           href="https://wa.me/919876543210" 
+          target="_blank"            // CRASH FIX: Open in new tab
+          rel="noopener noreferrer" // Security requirement for target="_blank"
+          onClick={() => trackEvent('cta_click', { button_name: 'footer_whatsapp', type: 'whatsapp' })}
           className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-full font-black uppercase tracking-tighter hover:bg-blue-50 transition"
         >
           WhatsApp Consultation <ArrowRight size={20} />
