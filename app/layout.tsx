@@ -23,10 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Moving the warning here fixes the error caused by external extensions
+    // suppressHydrationWarning on <html> ignores mismatches in attributes 
+    // injected by extensions (like Grammarly's data-gr-ext-installed)
     <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // Adding it here as well ensures child-level attribute mismatches 
+        // won't trigger the red error overlay during development
+        suppressHydrationWarning={true}
       >
         {children}
       </body>
