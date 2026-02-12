@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaxFlow | Growth-Engineered Landing Page
 
-## Getting Started
+A high-performance landing page for premium tax filing services, built with a focus on **Conversion Rate Optimization (CRO)** and **Advanced Marketing Attribution**.
 
-First, run the development server:
+## 🚀 Live Demo
+**URL:** [INSERT YOUR VERCEL LINK HERE]
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Tech Stack
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript (Static Typing for Event Schemas)
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React
+- **Deployment:** Vercel
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📊 Growth Architecture & Tracking
+This project goes beyond UI, implementing a full-funnel tracking system designed to optimize ad spend.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Attribution Logic
+We use a **Last-Touch Attribution** model.
+- **Persistence:** Marketing parameters (`utm_source`, `fbclid`, `gclid`) are extracted via a custom `useTracker` hook and persisted in `localStorage`.
+- **Consistency:** This ensures that lead source data remains accurate even if the user refreshes or returns later.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Event Schema
+| Event | Trigger | Strategic Purpose |
+| :--- | :--- | :--- |
+| `page_view` | Initial Load | Measures traffic and landing page reach. |
+| `cta_click` | Button Interaction | Tracks high-intent clicks (WhatsApp/Calls). |
+| `form_abandon` | Tab Close/Nav Away | Identifies friction points in the registration funnel. |
+| `lead_submit` | Validated Success | Captures PII merged with original attribution IDs. |
 
-## Learn More
+### 3. Conversion Feedback Loop
+The architecture is designed to support **Offline Conversions**:
+1. **Capture:** Frontend captures Lead + Click IDs.
+2. **Webhook:** Data is sent to an automation hub (e.g., Make.com).
+3. **CAPI:** Qualified signals are pushed back to **Meta/Google Conversion APIs** to train ad platform AI.
 
-To learn more about Next.js, take a look at the following resources:
+## 🏗️ Component Structure
+- `app/layout.tsx`: Root wrapper with Hydration error suppression for browser extensions.
+- `app/page.tsx`: Main entry point structuring the conversion sections.
+- `components/LeadForm.tsx`: Smart form with regex validation and abandonment listeners.
+- `hooks/useTracker.ts`: Centralized engine for event dispatching and attribution.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚙️ Installation & Setup
+1. Clone the repo: `git clone [YOUR_REPO_URL]`
+2. Install dependencies: `npm install`
+3. Run locally: `npm run dev`
